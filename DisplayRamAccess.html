@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html> <head>
+
+
+
+<link type="text/css" rel="stylesheet" href="/static/css/banner-styles.css"/>
+
+
+<meta charset="UTF-8">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" type="text/css" href="superkranz.css">
+<meta name="author" content="Christian Kranz">
+<title>Display Programming</title></head>
+<body>
+
+
+    <div id="Header">
+    </div>
+
+<div id="Content"> </div>
+<CENTER>
+<H1><img SRC="pics/S65_picture.jpg" ALIGN="left" alt="picture from S65">More advanced RAM addressing modes (LS020)</H1>
+by <A HREF="DisplayIndex.html">Christian Kranz</A>, December 2006<br>
+Updated: December 8, 2006
+</CENTER>
+<br><br>
+
+<h2> Address Auto-Increment and Windowing</h2>
+
+
+<p>
+The display controller generates the addresses of the integrated display-RAM automatically. 
+For that a window has to be defined in the display RAM. If data is written to the display RAM the data is displayed in that window.
+Depending on the address generating sequence the data is written in different modes to this window.
+
+This code shows how to write a rectangular bitmap image to the display memory. Pixes are drawn with textcolor,
+the background is drawn with backcolor. The image is stored as bit-array in the ascii_tab.
+array.
+
+<BLOCKQUOTE>
+<OBJECT>
+<PRE>
+  // image size is 8x14
+  uint8_t ascii_tab[14]={ 0x00, 0x00, 0x00, 0xfc, 0x66, 0x66, 0x66, 0x7c, 0x66, 0x66, 0x66, 0xfc, 0x00, 0x00},
+
+  for (h=0; h &lt CHAR_H; h++) // every column of the picture y-direction (mode 0)
+  {
+    ch=ascii_tab[h];	
+    mask=0x80;
+    for (p=0; p &lt CHAR_W; p++)  // write the pixels in x direction (mode 0)
+    {
+      if (ch &amp mask)  {
+        lcd_wrdat16(textcolor);                
+      }
+      else  {
+        lcd_wrdat16(backcolor);
+      }
+      mask=mask/2;
+    }
+  }
+</PRE>
+</OBJECT>
+</BLOCKQUOTE>
+
+
+
+<h2> Address generating sequence</h2>
+
+<p>
+The order of the automatically generated addresses can be programmed. 
+That means by using the same drawing routine the picture will appear in different orientations on the screen.
+For example the picture can be rotated by 90, 180 or 270 degree before it appears on the screen. The following pictues
+are showing all possible orientations.
+</p>
+
+<p>
+<br>
+  <img SRC="pics/addressing_mode_0.jpg"  alt="addressing_mode_0">
+  <img SRC="pics/addressing_mode_1.jpg"  alt="addressing_mode_1">
+  <img SRC="pics/addressing_mode_2.jpg"  alt="addressing_mode_2">
+  <img SRC="pics/addressing_mode_3.jpg"  alt="addressing_mode_0">
+  <img SRC="pics/addressing_mode_4.jpg"  alt="addressing_mode_1">
+  <img SRC="pics/addressing_mode_5.jpg"  alt="addressing_mode_2">
+  <img SRC="pics/addressing_mode_6.jpg"  alt="addressing_mode_0">
+  <img SRC="pics/addressing_mode_7.jpg"  alt="addressing_mode_1">
+<br>
+</p>
+
+<p>
+The given programming sequences are using the definition of the picture writing routine above. Note that the width (CHAR_W) 
+and the height (CHAR_H) have to be swapped, if the image is displayed in a 90 degree rotation.
+Inital, before starting data writing and address mode changing, the register have to be defined and the addressing mode 
+has to be set using the following code sequence:
+</p>
+
+
+<PRE>
+#define ASX 0x1200
+#define ASY 0x1300
+#define APX 0x1400
+#define AEX 0x1500
+#define AEY 0x1600
+#define APY 0x1700
+
+lcd_wrcmd16(0xEF80);
+</PRE>
+
+
+In the tabe you find the code for the mode change and the window definition code.
+
+<table border="1">
+<tr> <th> Mode </th> <th> Programming </th>  </tr>
+<tr> <td> normal mode </td> <td>  
+<PRE>  lcd_wrcmd16(0x1800);   
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x+(CHAR_W-1));
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y+(CHAR_H-1));</PRE></td> </tr>
+<tr> <td> y-axis symmetry (mirror image)</td> <td>  
+<PRE>  lcd_wrcmd16(0x1801);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x-(CHAR_W-1));
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y+(CHAR_H-1));
+</PRE></td> </tr>
+<tr> <td> x-axis line symmetry (mirror image)</td> <td>  
+<PRE>  lcd_wrcmd16(0x1802);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x+(CHAR_W-1));  
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y-(CHAR_H-1));
+</PRE></td> </tr>
+<tr> <td> 180 degree rotation </td> <td>  
+<PRE>  lcd_wrcmd16(0x1803);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x-(CHAR_W-1));
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y-(CHAR_H-1));
+</PRE></td> </tr>
+<tr> <td> mirror image, -90 degree </td> <td>  
+<PRE>  lcd_wrcmd16(0x1804);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x+(CHAR_W-1));
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y+(CHAR_H-1)); </PRE></td> </tr>
+<tr> <td> +90 degree </td> <td>  
+<PRE>  lcd_wrcmd16(0x1805);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x-(CHAR_H-1));  
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y+(CHAR_W-1)); </PRE></td> </tr>
+<tr> <td> -90 degree </td> <td>  
+<PRE>  lcd_wrcmd16(0x1806);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x-(CHAR_H-1));  
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y-(CHAR_W-1));</PRE></td> </tr>
+<tr> <td> +90 degree (mirror image)</td> <td>  
+<PRE>  lcd_wrcmd16(0x1807);
+  lcd_wrcmd16(ASX+x);
+  lcd_wrcmd16(AEX+x-(CHAR_H-1));  
+  lcd_wrcmd16(ASY+y);
+  lcd_wrcmd16(AEY+y-(CHAR_W-1));</PRE></td> </tr>
+</table>
+
+
+
+
+</body>
+</html> 
+
+
+
+
+<!--
+     FILE ARCHIVED ON 14:26:30 Dec 30, 2008 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 20:06:28 Mar 24, 2015.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->

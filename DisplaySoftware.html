@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html> <head>
+
+<meta charset="UTF-8">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" type="text/css" href="superkranz.css">
+<meta name="author" content="Christian Kranz">
+<title>Display Programming</title></head>
+<body>
+    <div id="Header">
+    </div>
+
+<div id="Content"> </div>
+<CENTER>
+<H1><A HREF="pics/hello_word_0_blue_large.jpg"> <img SRC="pics/hello_word_0_blue_small.jpg" ALIGN="left" alt="bild"> </a>S65-Display Software</H1>
+by <A HREF="DisplayIndex.html">Christian Kranz</A>, October 2005<br>
+Updated: March 28, 2008
+</CENTER>
+
+
+<br>
+<H3>Simple Test Software "Hello World" for ATMEL AVR processor</H3>
+<p>
+With the simple test software you can write a string to the display either in 0 degree or in 90 degree mode. It it written mostly in C and shows how to use the display with your own graphic routines.
+</p>
+
+<table border="1">
+<tr> <th> </th> <th> LS020xxx </th> <th> LPH88xxxx </th> <th> L2F50xxx </th> </tr>
+<tr>
+<td> </td>
+<td> <a HREF="pics/display_LS_large.jpg"><img SRC="pics/display_LS_small.jpg"  alt="bild"> </a></td>
+<td> <a HREF="pics/display_LPH_large.jpg"><img SRC="pics/display_LPH_small.jpg"  alt="bild"> </a></td>
+<td> <a HREF="pics/epson_display_large.jpg"><img SRC="pics/epson_display_small.jpg"  alt="bild"> </a></td>
+</tr>
+<tr>
+<td> <A HREF="pics/hello_word_0_red_large.jpg"> <img SRC="pics/hello_word_0_red_small.jpg" ALIGN="MIDDLE" alt="bild"> </a>  </td>
+<td ALIGN="center"> <a HREF="data/simple_display3.zip"> Download</a></td>
+<td ALIGN="center"> <a HREF="data/LPH_display4_V03.zip"> Download</a> </td> 
+<td ALIGN="center"> <a HREF="data/L2F50_display4_V02.zip"> Download</a> </td>
+</tr>
+</table>
+
+
+<br clear="left">
+
+
+
+<br>
+<H3>LCD Grafic Library (GLCD) for ATMEL AVR processor (currently LS020 only)</H3>
+<p>
+
+For a more comfortable usage of the display the <a HREF="/web/20081226045214/http://www.apetech.de/article.php?artId=3&amp;nnId=12"> Nokia 6100 LCD Library </a> written by Hagen Reddmann was adapted for the LS020-Display. The port is based on the assembler version v22. The library provides functions for
+</p>
+<ul>
+<li> setting pixel
+<li> draw lines
+<li> draw rectangles, filled and with border
+<li> draw ellipses and circles 
+<li> proportional and fixed fonts with different colors
+<li> clipping rectangle for all outputs
+<li> all routines support transparent drawing
+</ul>
+<p>
+The port to the LS020-displays has currently one limitation. At the moment the LS020 display can only be used with GLCD in the 90 degree orientation. That is because GLCD writes bitmaps/fonts column for column in Y-direction. To support different display orientations the flexible memory addressing of the Philips controller in the Nokia 6100 display was used. Unfortunately the LS020 display controller seems not to support such flexible addressing modes. That means the drawing routines in the GLCD has to be adapted for the 0 degree orientation of the display. That might be a good task for a next release of the library.
+</p>
+<p>
+At the moment the makefile for the test software in the library do not use recursive make. That means for compiling the test program you have first go to the glcd directory and do a make there. After that you can go into the test directory and do a make here for generating the target files.
+</p>
+
+<A HREF="pics/display_glcd_large.jpg"> <img SRC="pics/display_glcd_small.jpg" ALIGN="middle" alt="bild"> </a> 
+<a HREF="data/s65_glcd_V01.zip"> Download</a>
+
+
+
+</body>
+</html> 

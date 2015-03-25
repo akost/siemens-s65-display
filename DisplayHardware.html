@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html> <head>
+
+
+
+<link type="text/css" rel="stylesheet" href="/static/css/banner-styles.css"/>
+
+
+<meta charset="UTF-8">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" type="text/css" href="superkranz.css">
+<meta name="author" content="Christian Kranz">
+<title>Display Programming</title></head>
+<body>
+
+
+
+    <div id="Header">
+    </div>
+
+<div id="Content"> </div>
+<CENTER>
+<H1><img SRC="pics/atmega128.jpg" ALIGN="left" alt="picture from atmega128">Hardware for Display Test</H1>
+by <A HREF="DisplayIndex.html">Christian Kranz</A>, October 2005<br>
+Updated: November 1, 2005
+</CENTER>
+
+
+<br>
+<H3>Schematic</H3>
+<p>
+The schematic of the testboard is shown in the picture below. Both display supplies are connected to a 2.9V supply that is generated out of an LDO from the 5.0V supply of the atmega128 µC. I used the IRU1205CLTR LDO because i will later need the power on/off feature of this LDO. The atmega128 is running with 16MHz.
+</p>
+<p>
+The five interface lines between the display and the µC are level-shifted from the 5V domain of the µC to the 2.9V domain of the display. Because the interface will run with 8MHz the impedance has to be low to get stable signals. It might be a good idea to go to active level shifter in future to save power, especially for the RESET line because this line has to be high as long as the display is used. On the other hand you can use a higher impedance level shifter here because speed is not important.
+</p>
+
+<center>
+<img SRC="pics/circuit_orig.jpg" ALIGN="middle" alt="test circuit">
+</center>
+
+<p>
+Here are pictures of the testboards used to develop the hardware/software.
+</p>
+
+<A HREF="pics/pcb_front_large.jpg"> <img SRC="pics/pcb_front_small.jpg" alt="picture from pcb front"> </a>
+<A HREF="pics/pcb_back_large.jpg"> <img SRC="pics/pcb_back_small.jpg" alt="picture from pcb back"> </a>
+
+<p>
+If you are using the display in bright light you should protect the display controller (seen at the top of the display) with a black duct tape. It might be that the controller is sensitive against too much light radiation.
+</p>
+
+<p>
+  <A HREF="pics/Display_connect.jpg"> <img SRC="pics/Display_connect_small.jpg" ALIGN="middle" alt="picture display connection"> </a>
+  The Display pin description can be found on the picture on the left.
+  <br clear="left">
+</p>
+
+<H3>Display Backlight</H3>
+
+<p>
+The display forward voltage was measured at one part to be 10.4V at 20mA current. That means a relative large voltage is needed. This voltage can be easily generated with a PWM signal generator of the µC.
+
+(Do not forget to switch on the current limitation of your power supply until the PWM generator is running correct. If you drive the n-channel gate high for a longer time you will have a short circuit.) 
+
+For the circuit below you need a pulse width (high/period) of 47% at a period frequency of 62.5kHz to generate the required voltage with 15mA LED current. A block capacitor is already implemented on the display and is not needed. You can adjust the brightness of the display by varying the OCRn value. No software interaction is needed to generate this waveform with AVR processor. The code example below for the ATmega128 uses timer 2 with OC2 (PB7) for PWM generation. That means you can not use PB7 for LCD_RS any more (as in the circuit above). LCD_RS can be changed to PB5 for example. <br> 
+
+<br>
+For the final running application an over voltage protection is not required. But during testing and development it is not a bad idea to add a protection device. That might protect the circuit against hardware/software malfunctions.
+
+</p>
+
+<b>PWM Programming example</b> ATmega128 (AVR)
+<BLOCKQUOTE>
+<OBJECT>
+<PRE>
+  // backlight PWM generation
+  // use timer 2 in fast PWM mode for this
+  PORTB &= ~_BV(PB7);  // clear port before enable
+  DDRB |= _BV(PB7);  // will be used for OC2, must be output
+  TCCR2 = _BV(WGM21) | _BV(WGM20) | _BV(COM21) | _BV(CS20);
+  TCNT2=0x00;
+  OCR2=120;
+</PRE>
+</OBJECT>
+</BLOCKQUOTE>
+
+<center>
+<img SRC="pics/dcdc_led.jpg" ALIGN="middle" alt="picture dcdc boost converter">
+</center>
+
+
+  
+
+</body>
+</html> 

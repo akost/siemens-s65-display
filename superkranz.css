@@ -1,0 +1,70 @@
+ .textnormal { 
+         font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+         font-size : 12px
+}
+
+  .textstep { 
+       font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+       font-size : 24px;
+}
+
+  .EING { 
+         font-size : 10px
+}
+
+H1 {
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+     font-size : 40px;
+     font-weight:bold;
+     color : #000080
+}
+
+H2 {
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+     font-size : 25px;
+     font-weight:bold;
+     color : #000080
+}
+
+H3 {
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+     font-size : 18px;
+     font-weight:bold;
+     color : #000080
+}
+
+H4 {
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+     font-size : 12px;
+     font-weight:bold;
+         color : #000080
+}
+
+  A:link { 
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+/*         font-size : 12px;*/
+     font-weight:bold;
+     text-decoration:none;  
+     color : #000080
+}
+  A:active { 
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+/*         font-size : 12px; */
+     font-weight:bold;
+     text-decoration : none;
+     color : #FF0000
+}
+  A:visited { 
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+/*     font-size : 12px; */
+     font-weight:bold;
+     text-decoration : none;
+     color : #000080
+}
+  A:hover { 
+     font-family : Verdana,Geneva,Arial,Helvetica,Sans-serif;
+/*         font-size : 12px; */
+     font-weight:bold;
+     text-decoration : none;
+     color : #FF0000
+}
